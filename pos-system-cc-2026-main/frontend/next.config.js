@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configuración de empaquetado para entornos Cloud como Azure
+  output: 'standalone', 
+
   // TODO: Configurar dominio de imágenes cuando se migre a S3/CDN
   // images: {
   //   remotePatterns: [{ protocol: 'https', hostname: 'tu-bucket.s3.amazonaws.com' }],
   // },
+
   async rewrites() {
     return [
       {
