@@ -9,7 +9,9 @@
 
 require('dotenv').config({ path: './backend/.env' });
 const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); 
+
+
 
 const pool = new Pool({
   host:     process.env.DB_HOST     || 'evaluacion3.postgres.database.azure.com',

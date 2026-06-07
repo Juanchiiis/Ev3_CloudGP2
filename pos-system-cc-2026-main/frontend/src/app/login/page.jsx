@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+//bien
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');

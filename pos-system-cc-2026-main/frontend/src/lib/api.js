@@ -2,7 +2,9 @@ import axios from 'axios';
 
 // TODO: En producción, esta URL debe apuntar al Load Balancer / API Gateway del backend
 // No hardcodear URLs. Usar únicamente variables de entorno.
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+//const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+const API_URL = 'https://pos-backend-ev3-f4gzhefbczaghdfj.chilecentral-01.azurewebsites.net';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
