@@ -12,11 +12,14 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
-  host:     process.env.DB_HOST     || 'localhost',
+  host:     process.env.DB_HOST     || 'evaluacion3.postgres.database.azure.com',
   port:     process.env.DB_PORT     || 5432,
   database: process.env.DB_NAME     || 'pos_db',
-  user:     process.env.DB_USER     || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
+  user:     process.env.DB_USER     || 'Vicente_DB_Ev3',
+  password: process.env.DB_PASSWORD || 'ipvgev3)',
+  ssl: { 
+    rejectUnauthorized: false 
+  }
 });
 
 async function createAdmin() {
