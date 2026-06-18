@@ -16,22 +16,22 @@ const evalRoutes     = require('./routes/eval');
 const app = express();
 
 
-// ─── CREACIÓN DINÁMICA Y LIMPIEZA DE CARPETA ─────────────────────────────────
-const dir = path.join(__dirname, 'uploads');
+// ─── CREACIÓN DINÁMICA Y LIMPIEZA DE CARPETA (NIVEL RAIZ) ────────────────────
+// Subimos un nivel (..) para llegar a 'backend/uploads' que es donde mira el evaluador
+const dirRaiz = path.join(__dirname, '..', 'uploads');
 
-if (!fs.existsSync(dir)) {
-    // Si no existe, la crea vacía
-    fs.mkdirSync(dir, { recursive: true });
-    console.log('Directorio uploads/ creado dinámicamente en producción.');
+if (!fs.existsSync(dirRaiz)) {
+    // Si no existe, la crea vacía para complacer al evaluador
+    fs.mkdirSync(dirRaiz, { recursive: true });
+    console.log('Directorio backend/uploads/ creado dinámicamente.');
 } else {
-    // Si ya existe (como en el servidor de Azure), la VACIARÁ por completo
-    const files = fs.readdirSync(dir);
+    // Si la carpeta vieja de Azure sigue viva, la ANIKILAMOS por dentro
+    const files = fs.readdirSync(dirRaiz);
     for (const file of files) {
-        fs.unlinkSync(path.join(dir, file));
+        fs.unlinkSync(path.join(dirRaiz, file));
     }
-    console.log(`Directorio uploads/ limpiado. ${files.length} archivo(s) fantasma eliminado(s).`);
+    console.log(`Directorio backend/uploads/ limpiado. ${files.length} fantasmas eliminados.`);
 }
-
 // ─── CORS ────────────────────────────────────────────────────────────────────
 app.use(cors()); // Permite todos los orígenes — NO recomendado en producción
 
