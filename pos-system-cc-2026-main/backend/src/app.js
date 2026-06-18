@@ -13,6 +13,17 @@ const userRoutes     = require('./routes/users');
 const evalRoutes     = require('./routes/eval');
 
 const app = express();
+const fs = require('fs');
+const path = require('path');
+
+// Construir la ruta absoluta hacia backend/uploads
+const dir = path.join(__dirname, 'uploads');
+
+// Verificar si el directorio NO existe y crearlo dinámicamente
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log('Directorio uploads/ creado dinámicamente en producción.');
+}
 
 // ─── CORS ────────────────────────────────────────────────────────────────────
 // ⚠️ TODO: En producción restringir a dominios específicos:
