@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const { uploadToAzure } = require('../utils/azureStorage'); // <-- Importamos el "mensajero" a la nube
 
 // TODO: Agregar validación de inputs con express-validator (ya instalado)
 // TODO: Sanitizar datos antes de insertarlos
@@ -50,8 +51,16 @@ const getById = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { nombre, descripcion, precio, stock, categoria_id } = req.body;
-    // TODO: Validar que precio >= 0, stock >= 0, nombre no vacío, categoria_id exista
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
+    let imagen_url = null;
+
+    // 🚀 CAMBIO CLAVE: Si hay archivo en memoria, lo subimos a Azure
+    if (req.file) {
+      imagen_url = await uploadToAzure(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+    }
 
     const result = await pool.query(
       `INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, imagen_url)
@@ -60,6 +69,7 @@ const create = async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
+    console.error('Error creando producto:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -68,7 +78,17 @@ const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, descripcion, precio, stock, categoria_id, activo } = req.body;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : undefined;
+    
+    let imagen_url = undefined;
+
+    // 🚀 CAMBIO CLAVE: Si se sube una imagen nueva al actualizar, la mandamos a Azure
+    if (req.file) {
+      imagen_url = await uploadToAzure(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+    }
 
     const fields = [];
     const values = [];
@@ -93,13 +113,13 @@ const update = async (req, res) => {
     if (!result.rows.length) return res.status(404).json({ error: 'Producto no encontrado.' });
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('Error actualizando producto:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
 const remove = async (req, res) => {
   try {
-    // Soft delete — no elimina físicamente para mantener historial de ventas
     await pool.query('UPDATE productos SET activo = false WHERE id = $1', [req.params.id]);
     res.json({ message: 'Producto desactivado correctamente.' });
   } catch (err) {
