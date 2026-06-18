@@ -62,12 +62,11 @@ app.use((err, _req, res, _next) => {
 });
 
 //Endpoint de Health Check para Azure
-app.get('api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.status(200).json({
-    status:'UP',
-    environment:ProcessingInstruction.env.NODE_ENV || 'development',
+    status: 'UP',
+    environment: process.env.NODE_ENV || 'development',
     timestamp: new Date()
   });
 });
-
 module.exports = app;
