@@ -20,3 +20,9 @@ export function formatDate(iso) {
     timeStyle: 'short',
   });
 }
+
+export const getImageUrl = (url) => {
+  if (!url) return '/imagen-por-defecto.png'; // Cambia esto si tienes una imagen por defecto
+  if (url.startsWith('http')) return url; // ¡Viene de Azure! Usar tal cual
+  return `http://localhost:3001${url}`; // Ajusta el localhost al puerto de tu backend si es distinto
+};

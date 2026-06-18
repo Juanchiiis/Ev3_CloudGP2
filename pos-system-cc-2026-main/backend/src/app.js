@@ -15,21 +15,21 @@ const evalRoutes     = require('./routes/eval');
 
 const app = express();
 
-// ─── CREACIÓN DINÁMICA DE CARPETA ────────────────────────────────────────────
-// ─── CREACIÓN Y LIMPIEZA DINÁMICA DE CARPETA ─────────────────────────────────
+
+// ─── CREACIÓN DINÁMICA Y LIMPIEZA DE CARPETA ─────────────────────────────────
 const dir = path.join(__dirname, 'uploads');
 
-// 1. Si no existe, la creamos
 if (!fs.existsSync(dir)) {
+    // Si no existe, la crea vacía
     fs.mkdirSync(dir, { recursive: true });
     console.log('Directorio uploads/ creado dinámicamente en producción.');
 } else {
-    // 2. Si ya existe (por un despliegue anterior en Azure), vaciamos todo lo que tenga adentro
+    // Si ya existe (como en el servidor de Azure), la VACIARÁ por completo
     const files = fs.readdirSync(dir);
     for (const file of files) {
         fs.unlinkSync(path.join(dir, file));
     }
-    console.log(`Directorio uploads/ limpiado. ${files.length} archivo(s) residual(es) eliminado(s).`);
+    console.log(`Directorio uploads/ limpiado. ${files.length} archivo(s) fantasma eliminado(s).`);
 }
 
 // ─── CORS ────────────────────────────────────────────────────────────────────
